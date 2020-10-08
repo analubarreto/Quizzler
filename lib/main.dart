@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'question.dart';
 
 void main() {
   runApp(Quizzler());
@@ -29,19 +30,20 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  // Widgets
   Widget trueIcon = Icon(Icons.check, color: Colors.green);
   Widget falseIcon = Icon(Icons.close, color: Colors.red);
+
+  // Question list
   List<Widget> scoreKeeper = [];
-  List<String> questions = [
-    'You can lead a cow down stairs but not up stairs.',
-    'Approximately one quarter of human bones are in the feet.',
-    'A slug\'s blood is green.',
+  List<Question> questionBank = [
+     Question(q: 'JavaScript was invented in 1997.', a: true, wT: 'Actually JavaScript was created in 1997 by Brendan Eich'),
+     Question(q: 'Up until dart and flutter came, JavaScript was the only language used in the web.', a: false, wT: 'Actually no, there were languages like php, java, and python that can also be used in the web'),
+     Question(q: 'Flutter was created by facebook.', a: false, wT: 'Nope. Flutter is a framework created by Google.'),
+     Question(q: 'Programming languagues are incomprehesible by computers', a: true, wT: 'That one is actually true, computers only understand zeros and ones. All programming languanges are "translated" to binary code.'),
+     Question(q: 'The first ever programming language invented was C.', a: true, wT: 'Nope, it\'s onyl one of the most famous ones, the first programming language was created in 1949 and was named Plankalkül')
   ];
-  List<bool> answers = [
-    false,
-    true,
-    true
-  ];
+
   int questionNumber = 0;
 
   @override
@@ -56,7 +58,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                questions[questionNumber],
+                questionBank[questionNumber].questionText,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -81,7 +83,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState(() {
-                  bool correctAnswer = answers[questionNumber];
+                  bool correctAnswer = questionBank[questionNumber].questionAnswer;
                   if (correctAnswer == true) {
                     print('Yup');
                     scoreKeeper.add(
@@ -113,7 +115,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState(() {
-                  bool correctAnswer = answers[questionNumber];
+                  bool correctAnswer = questionBank[questionNumber].questionAnswer;
                   if (correctAnswer == false) {
                     print('Yup');
                     scoreKeeper.add(
