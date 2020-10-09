@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'question.dart';
+import 'quizzBrain.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
+QuizzBrain quizzBrain = QuizzBrain();
 void main() {
   runApp(Quizzler());
 }
@@ -30,21 +32,8 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  // Widgets
   Widget trueIcon = Icon(Icons.check, color: Colors.green);
   Widget falseIcon = Icon(Icons.close, color: Colors.red);
-
-  // Question list
-  List<Widget> scoreKeeper = [];
-  List<Question> questionBank = [
-     Question(q: 'JavaScript was invented in 1997.', a: true, wT: 'Actually JavaScript was created in 1997 by Brendan Eich'),
-     Question(q: 'Up until dart and flutter came, JavaScript was the only language used in the web.', a: false, wT: 'Actually no, there were languages like php, java, and python that can also be used in the web'),
-     Question(q: 'Flutter was created by facebook.', a: false, wT: 'Nope. Flutter is a framework created by Google.'),
-     Question(q: 'Programming languagues are incomprehesible by computers', a: true, wT: 'That one is actually true, computers only understand zeros and ones. All programming languanges are "translated" to binary code.'),
-     Question(q: 'The first ever programming language invented was C.', a: true, wT: 'Nope, it\'s onyl one of the most famous ones, the first programming language was created in 1949 and was named Plankalkül')
-  ];
-
-  int questionNumber = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +47,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                questionBank[questionNumber].questionText,
+                quizzBrain.getQuestionText(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -83,19 +72,14 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState(() {
-                  bool correctAnswer = questionBank[questionNumber].questionAnswer;
-                  if (correctAnswer == true) {
-                    print('Yup');
-                    scoreKeeper.add(
-                      trueIcon
-                    );
+                  quizzBrain.checkAnswer(true, trueIcon, falseIcon);
+                  if (quizzBrain.isFinished()) {
+                    Alert(context: context, title: "Game Over", desc: "You've Finished the Game.").show();
+                    quizzBrain.reset();
+                    quizzBrain.scoreKeeper = [];
                   } else {
-                    print('Nope');
-                    scoreKeeper.add(
-                      falseIcon
-                    );
+                    quizzBrain.nextQuestion();
                   }
-                  questionNumber += 1;
                 });
               },
             ),
@@ -115,26 +99,22 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 setState(() {
-                  bool correctAnswer = questionBank[questionNumber].questionAnswer;
-                  if (correctAnswer == false) {
-                    print('Yup');
-                    scoreKeeper.add(
-                      trueIcon
-                    );
-                  } else {
-                    print('Nope');
-                    scoreKeeper.add(
-                      falseIcon
-                    );
-                  }
-                  questionNumber += 1;
+                   quizzBrain.checkAnswer(true, trueIcon, falseIcon);
+                    if (quizzBrain.isFinished()) {
+                      Alert(context: context, title: "RFLUTTER", desc: "Flutter is awesome.").show()
+                    ;
+                      quizzBrain.reset();
+                      quizzBrain.scoreKeeper = [];
+                    } else {
+                      quizzBrain.nextQuestion();
+                    }
                 });
               },
             ),
           ),
         ),
         Row(
-          children: scoreKeeper,
+          children: quizzBrain.getScoreKeeper(),
         )
       ],
     );
