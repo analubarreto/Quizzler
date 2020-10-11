@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'components/GameButton.dart';
 import 'quizzBrain.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -35,6 +36,17 @@ class _QuizPageState extends State<QuizPage> {
   Widget trueIcon = Icon(Icons.check, color: Colors.green);
   Widget falseIcon = Icon(Icons.close, color: Colors.red);
 
+  void playingThegame () {
+    quizzBrain.checkAnswer(true, trueIcon, falseIcon);
+    if (quizzBrain.isFinished()) {
+      Alert(context: context, title: "Game Over", desc: "You've Finished the Game.").show();
+      quizzBrain.reset();
+      quizzBrain.scoreKeeper = [];
+    } else {
+      quizzBrain.nextQuestion();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -60,56 +72,32 @@ class _QuizPageState extends State<QuizPage> {
         Expanded(
           child: Padding(
             padding: EdgeInsets.all(15.0),
-            child: FlatButton(
-              textColor: Colors.white,
-              color: Colors.green.shade800,
-              child: Text(
-                'True',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                ),
-              ),
-              onPressed: () {
-                setState(() {
-                  quizzBrain.checkAnswer(true, trueIcon, falseIcon);
-                  if (quizzBrain.isFinished()) {
-                    Alert(context: context, title: "Game Over", desc: "You've Finished the Game.").show();
-                    quizzBrain.reset();
-                    quizzBrain.scoreKeeper = [];
-                  } else {
-                    quizzBrain.nextQuestion();
-                  }
-                });
-              },
+            child: GameButton(
+              btnText: 'True',
+              btnColor: Colors.green.shade800,
+              trueIcon: trueIcon,
+              falseIcon: falseIcon,
+              onPress: () => {
+                setState(() => {
+                  playingThegame()
+                })
+              },  
             ),
           ),
         ),
         Expanded(
           child: Padding(
             padding: EdgeInsets.all(15.0),
-            child: FlatButton(
-              color: Colors.red.shade800,
-              child: Text(
-                'False',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.white,
-                ),
-              ),
-              onPressed: () {
-                setState(() {
-                   quizzBrain.checkAnswer(true, trueIcon, falseIcon);
-                    if (quizzBrain.isFinished()) {
-                      Alert(context: context, title: "RFLUTTER", desc: "Flutter is awesome.").show()
-                    ;
-                      quizzBrain.reset();
-                      quizzBrain.scoreKeeper = [];
-                    } else {
-                      quizzBrain.nextQuestion();
-                    }
-                });
-              },
+            child: GameButton(
+              btnText: 'False',
+              btnColor: Colors.red.shade800,
+              trueIcon: trueIcon,
+              falseIcon: falseIcon,
+              onPress: () => {
+                setState(() => {
+                  playingThegame()
+                })
+              },  
             ),
           ),
         ),
